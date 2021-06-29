@@ -2,7 +2,7 @@
  * #%L
  * **********************************************************************
  * ORGANIZATION  :  Pi4J
- * PROJECT       :  Pi4J :: EXAMPLE  :: Sample Code
+ * PROJECT       :  Pi4J :: Space Invaders
  * FILENAME      :  module-info.java
  *
  * This file is part of the Pi4J project. More information about
@@ -30,7 +30,7 @@
  */
 open module com.almasb.fxglgames.spaceinvaders {
     // Pi4J MODULES
-    /*requires com.pi4j;
+    requires com.pi4j;
     requires com.pi4j.plugin.pigpio;
 
     // SLF4J MODULES
@@ -39,7 +39,7 @@ open module com.almasb.fxglgames.spaceinvaders {
     requires com.almasb.fxgl.all;
 
     uses com.pi4j.extension.Extension;
-    uses com.pi4j.provider.Provider;*/
+    uses com.pi4j.provider.Provider;
 
     // allow access to classes in the following namespaces for Pi4J annotation processing
     exports com.almasb.fxglgames.spaceinvaders to com.almasb.fxgl.core;
