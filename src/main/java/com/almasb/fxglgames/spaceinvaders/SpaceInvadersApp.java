@@ -42,6 +42,8 @@ import com.almasb.fxglgames.spaceinvaders.components.PlayerComponent;
 import com.almasb.fxglgames.spaceinvaders.event.BonusPickupEvent;
 import com.almasb.fxglgames.spaceinvaders.event.GameEvent;
 import com.almasb.fxglgames.spaceinvaders.level.*;
+import com.almasb.fxglgames.spaceinvaders.piMapping.PicadeControl;
+import com.almasb.fxglgames.spaceinvaders.piMapping.PicadeGameApplication;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.util.Duration;
@@ -60,7 +62,7 @@ import static com.almasb.fxglgames.spaceinvaders.Config.*;
  *
  * @author Almas Baimagambetov (AlmasB) (almaslvl@gmail.com)
  */
-public class SpaceInvadersApp extends GameApplication {
+public class SpaceInvadersApp extends PicadeGameApplication {
 
     @Override
     protected void initSettings(GameSettings settings) {
@@ -86,10 +88,10 @@ public class SpaceInvadersApp extends GameApplication {
     protected void initInput() {
         Input input = getInput();
 
-        onKey(KeyCode.A, "Move Left", () -> playerComponent.left());
-        onKey(KeyCode.D, "Move Right", () -> playerComponent.right());
-        onKeyDown(KeyCode.F, "Red Laser", () -> playerComponent.shootRedLaser());
-        onBtn(MouseButton.PRIMARY, "Shoot", () -> playerComponent.shoot());
+        onKey(PicadeControl.PIN_JOYSTICK_LEFT, KeyCode.A, () -> playerComponent.left());
+        onKey(PicadeControl.PIN_JOYSTICK_RIGHT, KeyCode.D, () -> playerComponent.right());
+        onKeyDown(KeyCode.F, () -> playerComponent.shootRedLaser());
+        onKeyDown(PicadeControl.PIN_BUTTON_1, KeyCode.R, () -> playerComponent.shoot());
         onBtn(MouseButton.SECONDARY, "Laser Beam", () -> playerComponent.shootLaser());
 
         // developer cheats
@@ -115,11 +117,6 @@ public class SpaceInvadersApp extends GameApplication {
 
     @Override
     protected void onPreInit() {
-        getSettings().setGlobalSoundVolume(0.1);
-        getSettings().setGlobalMusicVolume(1.0);
-
-        loopBGM("bgm.mp3");
-
         onEvent(BonusPickupEvent.ANY, this::onBonusPickup);
         onEvent(GameEvent.ENEMY_KILLED, this::onEnemyKilled);
         onEvent(GameEvent.ENEMY_REACHED_END, this::onEnemyReachedEnd);
@@ -243,7 +240,6 @@ public class SpaceInvadersApp extends GameApplication {
 
             runOnce(this::initLevel, Duration.seconds(LEVEL_START_DELAY));
 
-            play(Asset.SOUND_NEW_LEVEL);
         });
     }
 
@@ -308,7 +304,6 @@ public class SpaceInvadersApp extends GameApplication {
     protected void onUpdate(double tpf) {
         if (runningFirstTime) {
             nextLevel();
-            getNotificationService().pushNotification("Music: Eric Matyas www.soundimage.org");
             runningFirstTime = false;
         }
 
@@ -329,8 +324,6 @@ public class SpaceInvadersApp extends GameApplication {
         playerComponent.enableInvincibility();
 
         runOnce(playerComponent::disableInvincibility, Duration.seconds(INVINCIBILITY_TIME));
-
-        play(Asset.SOUND_LOSE_LIFE);
 
         if (geti("lives") == 0)
             showGameOver();
